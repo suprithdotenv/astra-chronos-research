@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASTRA CHRONOS: Initial Research and Design</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{--bg:#f6f4ef;--pn:#fff;--ink:#1b2430;--mu:#5c6672;--ln:#d9d5cb;--ac:#1f3a5f;--ab:#e8edf4;--sans:"IBM Plex Sans",system-ui,sans-serif;--serif:"Source Serif 4",Georgia,serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 var(--serif)}
+.w{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1180px;margin:0 auto}
+nav{position:sticky;top:0;height:100vh;overflow-y:auto;padding:28px 18px;border-right:1px solid var(--ln);font:14px var(--sans)}
+nav h1{font:600 16px/1.3 var(--serif);margin:0 0 4px;color:var(--ac)}
+nav p{margin:0 0 18px;color:var(--mu);font-size:12px}
+nav h6{margin:14px 0 4px;font:500 12px var(--sans);color:var(--mu);letter-spacing:.04em}
+nav a{display:block;padding:5px 10px;color:var(--mu);text-decoration:none;border-left:2px solid transparent}
+nav a:hover{color:var(--ink)}
+nav a.on{color:var(--ac);border-left-color:var(--ac);background:var(--ab)}
+main{padding:44px 44px 90px;max-width:860px}
+section{padding-top:8px;margin-bottom:56px;border-bottom:1px solid var(--ln);padding-bottom:36px}
+h2{font:600 26px/1.25 var(--serif);color:var(--ac);margin:0 0 14px}
+h3{font:500 16px var(--sans);margin:22px 0 6px}
+p,li{margin:0 0 10px}
+ul,ol{padding-left:22px;margin:0 0 10px}
+.tag{font:500 13px var(--sans);color:var(--mu);margin-bottom:6px}
+.note{background:var(--ab);border-left:3px solid var(--ac);padding:10px 14px;font-size:15px;margin:14px 0}
+table{width:100%;border-collapse:collapse;font:14px/1.5 var(--sans);background:var(--pn);margin:10px 0 14px}
+th,td{border:1px solid var(--ln);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--ab);font-weight:500}
+.tw{overflow-x:auto}
+.fl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font:13px var(--sans)}
+.fl span{background:var(--pn);border:1px solid var(--ln);padding:6px 10px}
+.fl i{color:var(--mu);font-style:normal}
+.ly{border:1px solid var(--ln);background:var(--pn);font:14px var(--sans);margin:12px 0}
+.ly div{padding:10px 14px;border-bottom:1px solid var(--ln)}
+.ly div:last-child{border:0}
+.ly b{font-weight:500;color:var(--ac)}
+pre{background:var(--pn);border:1px solid var(--ln);padding:12px 14px;overflow-x:auto;font:13px/1.55 ui-monospace,Menlo,Consolas,monospace;margin:10px 0 14px}
+code{font:13px ui-monospace,Menlo,Consolas,monospace;background:var(--ab);padding:1px 5px}
+.w{max-width:1280px}main{max-width:980px;padding:32px 36px 80px}
+section{padding:30px 34px;margin-bottom:24px;background:var(--pn);border:1px solid var(--ln)}
+pre,.fl span{background:var(--bg)}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.st div{border:1px solid var(--ln);background:var(--bg);padding:14px 16px}
+.st b{display:block;font:600 28px/1.1 var(--serif);color:var(--ac)}
+.st span{font:13px var(--sans);color:var(--mu)}
+.mm{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:12px 0}
+.mm a{display:block;border:1px solid var(--ln);padding:12px 14px;text-decoration:none;color:var(--ink);background:var(--bg);font:13.5px/1.5 var(--sans)}
+.mm a:hover{border-color:var(--ac)}
+.mm b{display:block;font:600 15px var(--serif);color:var(--ac);margin-bottom:2px}
+svg.d{width:100%;height:auto;display:block;margin:14px 0;background:var(--pn);border:1px solid var(--ln)}
+.d .cn{fill:#eef1f6;stroke:#1f3a5f}
+.d .bx{fill:#fff;stroke:#b9b4a6}
+.d .h{font:500 13px var(--sans);fill:#1f3a5f}
+.d .t{font:500 12.5px var(--sans);fill:#1b2430}
+.d .s{font:11.5px var(--sans);fill:#5c6672}
+.d .ar{stroke:#1f3a5f;stroke-width:1.5;fill:none}
+@media(max-width:800px){section{padding:22px 18px}.w{grid-template-columns:1fr}nav{position:static;height:auto;border:0;border-bottom:1px solid var(--ln)}main{padding:24px 18px 60px}}
+@media print{nav{display:none}.w{display:block}}
+</style>
+</head>
+<body>
+<div class="w">
+<nav aria-label="Contents">
+<h1>ASTRA CHRONOS</h1><p>Initial research and design</p>
+<a href="#overview">Overview</a>
+<h6>MODULES</h6>
+<a href="#m1">1. Problem understanding</a>
+<a href="#m2">2. Simulation and telemetry</a>
+<a href="#m3">3. Behaviour classification</a>
+<a href="#m4">4. Threat assessment</a>
+<a href="#m5">5. Trajectory prediction</a>
+<a href="#m6">6. Virtual interception</a>
+<a href="#m7">7. Command console</a>
+<a href="#m8">8. Data and evaluation</a>
+<a href="#m9">9. Technical approaches</a>
+<h6>DESIGN</h6>
+<a href="#mvp">MVP</a>
+<a href="#arch">System architecture</a>
+<a href="#flow">Data flow</a>
+<a href="#impl">Implementation plan</a>
+<a href="#test">Testing and expansion</a>
+</nav>
+<main>
+
+<section id="overview">
+<div class="tag">Initial research and design document</div>
+<h2>ASTRA CHRONOS: AI-powered counter-UAS interception simulator</h2>
+<p>ASTRA CHRONOS is a software-only simulation and decision-support platform. It models the path from simulated radar telemetry to behaviour assessment, threat scoring, trajectory prediction and virtual interception, and presents the result in a 3D radar-style command console.</p>
+<div class="fl"><span>Telemetry</span><i>&rarr;</i><span>Behaviour</span><i>&rarr;</i><span>Threat score</span><i>&rarr;</i><span>GRU prediction</span><i>&rarr;</i><span>Virtual interceptor</span><i>&rarr;</i><span>3D console</span></div>
+<div class="st"><div><b>9</b><span>Research modules</span></div><div><b>5</b><span>Behaviour classes</span></div><div><b>3</b><span>Predictors compared</span></div><div><b>4</b><span>API endpoints</span></div></div>
+<h3>Objectives</h3>
+<ul>
+<li>Real-time simulation with a stable tick-based loop.</li>
+<li>Predictive AI that estimates future trajectory, not only current position.</li>
+<li>Interpretable threat prioritization across scenarios.</li>
+<li>Model validation by measuring prediction error and interception outcomes.</li>
+<li>Graceful fallback to a deterministic kinematic predictor if the trained model is unavailable.</li>
+<li>Coherent visualization of tracks, predicted paths, threat history, zones and interceptor state.</li>
+</ul>
+<div class="note">Simulation safety boundary: the project is explicitly virtual. It is not a real-world interception or weapon-control system.</div>
+<h3>Module map</h3>
+<div class="mm">
+<a href="#m1"><b>1. Problem</b>What C-UAS is and what success looks like</a>
+<a href="#m2"><b>2. Simulation</b>Telemetry, behaviours, noise, time</a>
+<a href="#m3"><b>3. Behaviour</b>Rules first, then learned models</a>
+<a href="#m4"><b>4. Threat</b>Explainable weighted priority score</a>
+<a href="#m5"><b>5. Prediction</b>Constant velocity, Kalman, GRU</a>
+<a href="#m6"><b>6. Interception</b>Virtual interceptor policies</a>
+<a href="#m7"><b>7. Console</b>React 3D command dashboard</a>
+<a href="#m8"><b>8. Data</b>Datasets, splits, metrics</a>
+<a href="#m9"><b>9. Approaches</b>Technology comparison method</a>
+</div>
+</section>
+
+<section id="m1">
+<div class="tag">Module 1</div>
+<h2>Problem understanding</h2>
+<p>Counter-UAS (C-UAS) covers methods for detecting, monitoring, assessing and responding to potential drone threats. This project focuses on the software simulation and decision-support side.</p>
+<h3>Four related challenges</h3>
+<table><tr><th>Challenge</th><th>Question</th></tr>
+<tr><td>Situational awareness</td><td>Where are the drones and how are they moving now?</td></tr>
+<tr><td>Behaviour understanding</td><td>Is a drone moving normally, hovering, loitering or evasive?</td></tr>
+<tr><td>Future movement prediction</td><td>Where might it be a short time from now?</td></tr>
+<tr><td>Decision support</td><td>How are observations, uncertainty and outcomes presented to an operator?</td></tr></table>
+<p>These are distinct problems: a system can track accurately while predicting poorly.</p>
+<h3>Why it is difficult</h3>
+<p>Official guidance cites small size, unpredictable movement and confusion with birds. For this research the main issues are noisy or missing telemetry, changing movement, prediction uncertainty when behaviour changes, the fact that movement alone does not prove hostile intent, and real-time operation without an unresponsive interface. These are research questions, not solved claims.</p>
+<h3>Success looks like</h3>
+<ul><li>Reliable runs across scenarios.</li><li>Classification evaluated against known simulated labels.</li><li>Threat scores that respond consistently to controlled scenario changes.</li><li>Predictions compared with true trajectories and simpler baselines.</li><li>A dashboard that matches backend state, and reproducible mission outcomes.</li></ul>
+<p>Guiding principle: every important capability is evaluated rather than judged by appearance.</p>
+</section>
+
+<section id="m2">
+<div class="tag">Module 2</div>
+<h2>Drone simulation and telemetry</h2>
+<p>A simulator maintains a virtual drone state and advances it over time. This gives repeatable scenarios and known ground truth at every step. Success in simulation does not automatically transfer to real drones.</p>
+<h3>Telemetry (illustrative)</h3>
+<div class="tw"><table><tr><th>Variable</th><th>Example</th><th>Meaning</th></tr>
+<tr><td>Time</td><td>2.0 s</td><td>When the observation occurred</td></tr>
+<tr><td>Position X, Y, Z</td><td>12, 8, 15 m</td><td>Location in the chosen coordinate system</td></tr>
+<tr><td>Velocity</td><td>3 m/s</td><td>Speed and direction of change of position</td></tr>
+<tr><td>Heading</td><td>45&deg;</td><td>Facing direction, not always the direction of travel</td></tr></table></div>
+<p>Acceleration (m/s&sup2;) describes how velocity changes. A trajectory is the sequence of positions over time; the observed part is recorded, the predicted part is estimated and compared with simulator ground truth.</p>
+<h3>Flight behaviours (simplified categories, not real intent)</h3>
+<div class="tw"><table><tr><th>Behaviour</th><th>Simulated as</th></tr>
+<tr><td>Normal flight</td><td>Smooth changes in position</td></tr>
+<tr><td>Hovering</td><td>Small variations around one location</td></tr>
+<tr><td>Loitering</td><td>Repeated or curved paths in an area</td></tr>
+<tr><td>Evasive movement</td><td>Irregular turns or speed changes</td></tr>
+<tr><td>Fast approach</td><td>Rapid movement with increasing proximity to a target area</td></tr></table></div>
+<h3>Noise, time and leakage</h3>
+<ul>
+<li>Ground truth (exact simulator state) is kept separate from observed telemetry (possibly noisy, missing or delayed).</li>
+<li>Simulation time and wall-clock time differ. Consistent time steps matter, for example 0.05 s (20 updates per second) as an illustrative interval.</li>
+<li>Data leakage: split train and test by whole trajectories or scenario configurations, not individual time steps. Results then show simulated generalisation only.</li>
+</ul>
+<h3>Simulator options (none selected)</h3>
+<p>A: mathematical motion simulator (simple, controllable, may omit real dynamics). B: physics-based robotics simulator (richer, more setup). C: flight simulator (depends on interfaces and data access).</p>
+</section>
+
+<section id="m3">
+<div class="tag">Module 3</div>
+<h2>Behaviour classification</h2>
+<p>Classification identifies how a drone moves from its telemetry. The label supports the console display, gives context to threat assessment and feeds the prediction module. It describes movement, not intent.</p>
+<div class="tw"><table><tr><th>Approach</th><th>How it works</th><th>Trade-off</th></tr>
+<tr><td>Rule-based</td><td>Conditions such as low speed for hovering</td><td>Simple, rules need careful design</td></tr>
+<tr><td>Machine learning</td><td>Learns from labelled movement data</td><td>Needs representative training data</td></tr>
+<tr><td>Hybrid</td><td>Combines rules and learned patterns</td><td>Flexible, more complex</td></tr></table></div>
+<h3>Implementation approach</h3>
+<ol><li>Collect position, velocity and history each time step.</li><li>Compute features: speed, change in speed, turning rate, position change over time.</li><li>Apply rules based on sustained patterns that tolerate noise, for example sustained near-zero speed for hovering and repeated circular motion for loitering.</li><li>Return the label with confidence or evidence to the React console.</li></ol>
+<p>The plan starts with rules as a baseline, then tests whether machine learning improves it, using held-out simulated trajectories with precision, recall and a confusion matrix.</p>
+</section>
+
+<section id="m4">
+<div class="tag">Module 4</div>
+<h2>Threat assessment</h2>
+<p>Each simulated drone receives a priority score from its movement and scenario context. Classification says how it moves; the score says how much attention it may need.</p>
+<div class="fl"><span>Position, speed, direction, behaviour, zones</span><i>&rarr;</i><span>Distance to zone, direction, time to reach</span><i>&rarr;</i><span>Scoring engine</span><i>&rarr;</i><span>Score, category, reasons</span></div>
+<h3>Illustrative weighted score</h3>
+<pre>score = round(100 * (0.40 * zone_proximity
+                   + 0.35 * approach_factor
+                   + 0.25 * speed_factor))</pre>
+<p>Inputs are normalized from 0 to 1. The weights are starting values, not validated constants. Provisional bands: 0 to 29 low, 30 to 59 medium, 60 to 100 high. The score is a simulated priority, not a probability of hostility.</p>
+<div class="tw"><table><tr><th>Approach</th><th>Trade-off</th></tr>
+<tr><td>Rule-based</td><td>Easy to explain, may be rigid</td></tr>
+<tr><td>Weighted scoring (starting point)</td><td>Transparent, weights need calibration</td></tr>
+<tr><td>Machine learning</td><td>Only if meaningful ground-truth labels exist</td></tr></table></div>
+<p>Tests: score rises on approach to a zone, accounts for direction and not distance alone, stays stable under noisy telemetry, can be explained in the console, and handles edge cases such as a fast drone moving away from a zone.</p>
+</section>
+
+<section id="m5">
+<div class="tag">Module 5</div>
+<h2>Trajectory prediction</h2>
+<p>Primary research focus: can AI predict a drone’s future position more accurately than simpler motion models?</p>
+<div class="tw"><table><tr><th>Model</th><th>How it predicts</th></tr>
+<tr><td>Constant velocity</td><td>Continues the current velocity</td></tr>
+<tr><td>Kalman filter</td><td>Estimates motion while accounting for measurement noise</td></tr>
+<tr><td>GRU neural network</td><td>Learns patterns from sequences of past movement</td></tr></table></div>
+<h3>GRU training plan</h3>
+<ol><li>Generate many simulated trajectories.</li><li>Split each into past movement (input) and future movement (target).</li><li>Train the GRU to predict future positions.</li><li>Test on entirely separate trajectories.</li><li>Compare errors with the baseline models.</li></ol>
+<p>Metrics: Average Displacement Error (ADE), the mean distance between predicted and actual positions, and Final Displacement Error (FDE), the distance at the final prediction time. The aim is lower error, especially during turns and changing movement. The complex model must be shown to improve on the baselines, not assumed to.</p>
+</section>
+
+<section id="m6">
+<div class="tag">Module 6</div>
+<h2>Virtual interception simulation</h2>
+<p>A virtual interceptor responds to the target’s predicted movement, entirely inside the software environment. The target follows a predefined scenario; the interceptor follows a selected test policy. Nothing controls real aircraft or weapons.</p>
+<div class="fl"><span>Target state and predicted path</span><i>&rarr;</i><span>Update interceptor under policy and constraints</span><i>&rarr;</i><span>Check success conditions and limits</span><i>&rarr;</i><span>Publish tracks and metrics</span></div>
+<ul><li>Scripted simulation: predefined path, used as a baseline.</li><li>Rule-based simulation: explicit movement rules and constraints.</li><li>Prediction-assisted simulation: predicted target positions feed the test policy.</li></ul>
+<p>Evaluation: scenario success rate, completion time, constraint violations, and prediction impact against a baseline that does not use predictions. Success conditions and movement constraints are defined before testing. The key question: does improved prediction lead to measurable improvement in simulated outcomes?</p>
+</section>
+
+<section id="m7">
+<div class="tag">Module 7</div>
+<h2>Command console and visualization</h2>
+<p>A React-based 3D dashboard monitors the simulation in real time.</p>
+<ul><li>3D view: drone positions, movement trails, predicted paths and virtual zones.</li><li>Drone panel: speed, classified behaviour, threat score and predicted trajectory.</li><li>Controls and history: scenario selection, start, pause and reset, threat-score history and interceptor status.</li></ul>
+<p>Data flow: the Python backend updates states and predictions, a FastAPI endpoint sends the data to React, React updates the scene and panels, and user commands return to the backend. Candidate technologies: React with Vite, Three.js or React Three Fiber, charts, and FastAPI. The 3D library and update method are not finalized.</p>
+</section>
+
+<section id="m8">
+<div class="tag">Module 8</div>
+<h2>Data, datasets and evaluation</h2>
+<ol><li>Generate simulated flights across scenarios.</li><li>Record positions, velocities, timestamps, behaviour labels and ground truth.</li><li>Clean data and split whole trajectories into training, validation and test sets.</li><li>Evaluate on unseen scenarios.</li></ol>
+<div class="tw"><table><tr><th>Data</th><th>Purpose</th></tr>
+<tr><td>Position and velocity</td><td>Train trajectory prediction</td></tr>
+<tr><td>Behaviour labels</td><td>Train and evaluate classification</td></tr>
+<tr><td>True future positions</td><td>Check prediction accuracy</td></tr>
+<tr><td>Noise-affected observations</td><td>Test robustness</td></tr>
+<tr><td>Scenario labels</td><td>Compare performance across conditions</td></tr></table></div>
+<p>Metrics: ADE and FDE for prediction; precision, recall and confusion matrix for classification; threat scores checked against predefined simulation priorities; robustness repeated with noisy or missing observations. Good results on simulated data show performance in those scenarios, not necessarily real-world performance.</p>
+</section>
+
+<section id="m9">
+<div class="tag">Module 9</div>
+<h2>Technical approach research</h2>
+<p>Technologies are chosen on evidence, not popularity.</p>
+<div class="tw"><table><tr><th>Component</th><th>Options</th><th>Compared on</th></tr>
+<tr><td>Simulation</td><td>Custom Python, physics-based</td><td>Complexity, realism, control</td></tr>
+<tr><td>Behaviour classification</td><td>Rules, ML classifier</td><td>Accuracy, interpretability</td></tr>
+<tr><td>Threat scoring</td><td>Weighted rules, learned model</td><td>Explainability, reliability</td></tr>
+<tr><td>Trajectory prediction</td><td>Constant velocity, Kalman, GRU</td><td>Prediction error, runtime</td></tr>
+<tr><td>3D visualization</td><td>Three.js, React Three Fiber</td><td>Integration, performance</td></tr>
+<tr><td>Backend</td><td>FastAPI</td><td>API design, simulation integration</td></tr></table></div>
+<p>Method: define what the component must achieve, identify candidates, compare advantages and dependencies, test promising options on representative scenarios, and document the choice and reason.</p>
+</section>
+
+<section id="mvp">
+<div class="tag">Design</div>
+<h2>Minimum viable product</h2>
+<p>The first goal is a small but complete working version: simulate a drone, analyse and predict, and display everything on a dashboard.</p>
+<div class="tw"><table><tr><th>MVP: build first</th><th>Later versions</th></tr>
+<tr><td>One simulated drone</td><td>Multiple drones</td></tr>
+<tr><td>Basic movement scenarios</td><td>More complex scenarios</td></tr>
+<tr><td>Rule-based classification</td><td>Trained classifier, if useful</td></tr>
+<tr><td>Simple threat scoring</td><td>Calibrated scoring</td></tr>
+<tr><td>Constant-velocity prediction</td><td>GRU and model comparisons</td></tr>
+<tr><td>Basic 3D dashboard</td><td>Advanced visualization</td></tr>
+<tr><td>Start, pause, reset</td><td>Additional simulation features</td></tr></table></div>
+<p>The interceptor starts as a virtual demonstration component. The MVP works when the drone moves correctly, telemetry updates consistently, classification and scoring are understandable, predicted positions appear, start, pause and reset are reliable, and the system keeps running if the optional trained model is unavailable.</p>
+</section>
+
+<section id="arch">
+<div class="tag">Design</div>
+<h2>System architecture</h2>
+<svg class="d" viewBox="0 0 760 530" role="img" aria-label="Layered architecture: React frontend, FastAPI backend, and below it the Python simulation engine and AI pipeline">
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#1f3a5f" stroke-width="1.6"/></marker></defs>
+<rect class="cn" x="10" y="10" width="740" height="110"/><text class="h" x="24" y="32">Frontend: React + Vite</text>
+<rect class="bx" x="24" y="46" width="228" height="62"/><text class="t" x="138" y="72" text-anchor="middle">3D scene</text><text class="s" x="138" y="90" text-anchor="middle">Three.js or React Three Fiber</text>
+<rect class="bx" x="268" y="46" width="228" height="62"/><text class="t" x="382" y="72" text-anchor="middle">Drone panel and charts</text><text class="s" x="382" y="90" text-anchor="middle">behaviour, score, history</text>
+<rect class="bx" x="512" y="46" width="228" height="62"/><text class="t" x="626" y="72" text-anchor="middle">Controls</text><text class="s" x="626" y="90" text-anchor="middle">start, pause, reset</text>
+<line class="ar" x1="380" y1="124" x2="380" y2="166" marker-start="url(#a)" marker-end="url(#a)"/><text class="s" x="392" y="150">HTTP / JSON</text>
+<rect class="cn" x="10" y="170" width="740" height="100"/><text class="h" x="24" y="192">Backend API: FastAPI (single source of truth for state)</text>
+<rect class="bx" x="24" y="206" width="350" height="52"/><text class="t" x="199" y="228" text-anchor="middle">api/routes.py</text><text class="s" x="199" y="246" text-anchor="middle">init, step, reset, state</text>
+<rect class="bx" x="390" y="206" width="350" height="52"/><text class="t" x="565" y="228" text-anchor="middle">schemas/state.py</text><text class="s" x="565" y="246" text-anchor="middle">validates requests and responses</text>
+<line class="ar" x1="192" y1="274" x2="192" y2="316" marker-start="url(#a)" marker-end="url(#a)"/><text class="s" x="202" y="300">scenario, time step</text>
+<line class="ar" x1="568" y1="274" x2="568" y2="316" marker-start="url(#a)" marker-end="url(#a)"/><text class="s" x="578" y="300">telemetry in, results out</text>
+<rect class="cn" x="10" y="320" width="350" height="180"/><text class="h" x="24" y="342">Simulation engine: Python</text>
+<rect class="bx" x="24" y="354" width="322" height="38"/><text class="t" x="185" y="370" text-anchor="middle">Scenario generator</text><text class="s" x="185" y="385" text-anchor="middle">scenarios.py: type, start, settings</text>
+<rect class="bx" x="24" y="400" width="322" height="38"/><text class="t" x="185" y="416" text-anchor="middle">State update per tick</text><text class="s" x="185" y="431" text-anchor="middle">engine.py: position, velocity, time</text>
+<rect class="bx" x="24" y="446" width="322" height="38"/><text class="t" x="185" y="462" text-anchor="middle">Telemetry processing</text><text class="s" x="185" y="477" text-anchor="middle">ground truth kept apart from noisy data</text>
+<rect class="cn" x="400" y="320" width="350" height="180"/><text class="h" x="414" y="342">AI pipeline: Python</text>
+<rect class="bx" x="414" y="354" width="322" height="38"/><text class="t" x="575" y="370" text-anchor="middle">Behaviour classifier</text><text class="s" x="575" y="385" text-anchor="middle">behaviour.py: rules first, ML later</text>
+<rect class="bx" x="414" y="400" width="322" height="38"/><text class="t" x="575" y="416" text-anchor="middle">Threat scorer</text><text class="s" x="575" y="431" text-anchor="middle">threat_scoring.py: score and reasons</text>
+<rect class="bx" x="414" y="446" width="322" height="38"/><text class="t" x="575" y="462" text-anchor="middle">Trajectory predictor</text><text class="s" x="575" y="477" text-anchor="middle">trajectory.py: GRU or baseline fallback</text>
+<line class="ar" x1="362" y1="462" x2="398" y2="462" marker-end="url(#a)"/>
+<text class="s" x="380" y="520" text-anchor="middle">Observed telemetry flows from the simulation engine to the AI pipeline. Ground truth is used for evaluation only.</text>
+</svg>
+<div class="tw"><table><tr><th>Component</th><th>Receives</th><th>Produces</th></tr>
+<tr><td>Simulation engine</td><td>Scenario settings, time step</td><td>Drone state and telemetry</td></tr>
+<tr><td>Behaviour classifier</td><td>Telemetry history</td><td>Behaviour label</td></tr>
+<tr><td>Threat scorer</td><td>Telemetry, zone context</td><td>Explainable priority score</td></tr>
+<tr><td>Trajectory predictor</td><td>Recent movement history</td><td>Future positions</td></tr>
+<tr><td>FastAPI</td><td>Commands, module outputs</td><td>API responses</td></tr>
+<tr><td>React console</td><td>API responses</td><td>Display and controls</td></tr></table></div>
+<h3>Run flow</h3>
+<p>Start in React, request to FastAPI, simulation initialized, engine advances each tick, AI modules analyse telemetry, FastAPI returns state and results, React updates position, path, label and score. Pause and reset follow the same pattern.</p>
+<h3>Decisions</h3>
+<ul><li>The backend owns simulation state; the frontend displays it.</li><li>Each update follows a defined time step.</li><li>AI modules are independent and testable separately.</li><li>Without a trained GRU checkpoint, a baseline predictor takes over.</li><li>Request and response structures are agreed as clear API contracts.</li></ul>
+</section>
+
+<section id="flow">
+<div class="tag">Design</div>
+<h2>Data flow</h2>
+<div class="fl"><span>Scenario configuration</span><i>&rarr;</i><span>Simulation engine</span><i>&rarr;</i><span>Telemetry processing</span><i>&rarr;</i><span>Behaviour, score, prediction</span><i>&rarr;</i><span>FastAPI response</span><i>&rarr;</i><span>React console</span></div>
+<h3>Example state (illustrative)</h3>
+<pre>{
+  "drone_id": "drone_01",
+  "timestamp": 12.0,
+  "position": [10.0, 5.0, 8.0],
+  "velocity": [2.0, 0.5, 0.0],
+  "behaviour": "normal_flight",
+  "threat_score": 25,
+  "predicted_positions": [[12.0, 5.5, 8.0], [14.0, 6.0, 8.0]]
+}</pre>
+<p>Positions are in metres, velocities in metres per second, timestamps in simulation seconds. Two streams are kept apart: ground truth for evaluation, and observed telemetry, possibly noisy, supplied to the AI. React sends commands (initialize, advance one tick, pause, reset) to FastAPI, which calls the modules and returns JSON. The MVP uses ordinary HTTP; WebSockets are considered only if continuous updates become inefficient.</p>
+</section>
+
+<section id="impl">
+<div class="tag">Design</div>
+<h2>Implementation plan</h2>
+<ol><li>Simulation engine: position, velocity and telemetry each tick.</li><li>Analysis modules: behaviour, transparent threat scoring, baseline predictor.</li><li>FastAPI backend connecting them through consistent endpoints.</li><li>React frontend: drone, trail, predicted path, behaviour, score, controls.</li><li>Integration and testing.</li></ol>
+<div class="tw"><table><tr><th>Endpoint</th><th>Purpose</th></tr>
+<tr><td><code>POST /mission/init</code></td><td>Initialize a scenario</td></tr>
+<tr><td><code>POST /mission/step</code></td><td>Advance one tick</td></tr>
+<tr><td><code>POST /mission/reset</code></td><td>Reset the simulation</td></tr>
+<tr><td><code>GET /mission/state</code></td><td>Retrieve current state</td></tr></table></div>
+<p>Pause and resume use explicit state-management logic. The proposed project layout:</p>
+<pre>astra-chronos/
+  frontend/src/  components/  scene/  services/
+  backend/
+    main.py
+    api/routes.py
+    simulation/  engine.py  scenarios.py
+    ai/  behaviour.py  threat_scoring.py  trajectory.py
+    schemas/state.py
+  tests/
+  data/
+  README.md</pre>
+<p>Principle: build a working end-to-end system first, and improve components only once their performance can be measured.</p>
+</section>
+
+<section id="test">
+<div class="tag">Design</div>
+<h2>Testing and expansion</h2>
+<div class="tw"><table><tr><th>Component</th><th>What is tested</th><th>Success criteria</th></tr>
+<tr><td>Simulation</td><td>Movement and reset</td><td>State updates correctly, reset restores the initial state</td></tr>
+<tr><td>Behaviour classification</td><td>Known movement patterns</td><td>Labels match expected patterns</td></tr>
+<tr><td>Threat scoring</td><td>Virtual-zone scenarios</td><td>Scores respond consistently to the rules</td></tr>
+<tr><td>Trajectory prediction</td><td>Predicted vs actual</td><td>Error measured on unseen trajectories</td></tr>
+<tr><td>Backend API</td><td>Initialize, step, reset</td><td>Valid responses, correct transitions</td></tr>
+<tr><td>Frontend</td><td>Dashboard and controls</td><td>Display matches backend state</td></tr>
+<tr><td>Full system</td><td>Complete flow</td><td>Components work together reliably</td></tr></table></div>
+<p>AI performance is measured with ADE, FDE, precision, recall and robustness to noise or missing observations, always against simpler baselines.</p>
+<h3>Expansion phases</h3>
+<ol><li>Working MVP: one drone, baseline prediction, simple scoring, API and dashboard.</li><li>Data and AI validation: generate datasets, train candidate models, compare on held-out scenarios.</li><li>Complete demonstrator: more scenarios, richer visualization, model fallback and interceptor-state visualization.</li></ol>
+<p>The MVP is ready when a user can start a scenario, observe the drone, see its behaviour and threat score, view predicted positions, and reset without errors.</p>
+</section>
+
+</main>
+</div>
+<script>
+(function(){var L=[].slice.call(document.querySelectorAll('nav a')),S=L.map(function(a){return document.querySelector(a.getAttribute('href'))});
+function u(){var y=window.scrollY+140,c=0;S.forEach(function(s,i){if(s.offsetTop<=y)c=i});L.forEach(function(a,i){a.classList.toggle('on',i===c)})}
+window.addEventListener('scroll',u,{passive:true});u()})();
+</script>
+</body>
+</html>
